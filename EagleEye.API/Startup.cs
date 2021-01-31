@@ -9,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EagleEye.API.Services;
+using EagleEye.DataAccess.Repositories;
+using Microsoft.OpenApi.Models;
 
 namespace EagleEye.API
 {
@@ -25,6 +28,17 @@ namespace EagleEye.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddTransient<IMetadataRepository, MetadataRepository>();
+            services.AddTransient<IStatsRepository, StatsRepository>();
+            services.AddTransient<IMetadataService, MetadataService>();
+            services.AddTransient<IStatsService, StatsService>();
+
+            // Swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Eagle Eye API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +56,18 @@ namespace EagleEye.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            // Swagger
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "swagger/{documentName}/swagger.json";
+            });
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = "swagger";
+                var swaggerJsonBasePath = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
+                c.SwaggerEndpoint($"{swaggerJsonBasePath}/swagger/v1/swagger.json", "Eagle Eye API");
             });
         }
     }
