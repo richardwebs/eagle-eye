@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Text.Json;
+using EagleEye.API.Models;
 
 namespace EagleEye.API.UnitTests.ServiceTests
 {
@@ -48,6 +49,17 @@ namespace EagleEye.API.UnitTests.ServiceTests
             {
                 Console.WriteLine(JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true }));
             }
+        }
+
+        [Test]
+        public void AddMetadata()
+        {
+            // setup
+            var input = new MetadataInput(1, "title", "language", "duation", 1);
+            // execute
+            _service.AddMetadata(input);
+            // verify
+            _repository.Verify(x => x.AddMetadata(input.MovieId, input.Title, input.Language, input.Duration, input.ReleaseYear), Times.Once);
         }
     }
 }

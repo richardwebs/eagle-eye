@@ -39,5 +39,11 @@ namespace EagleEye.DataAccess.IntegrationTests.RepositoryTests
                 Assert.AreEqual(movieId, metadata.MovieId);
             }
         }
+
+        [Test]
+        public void AddMetadata()
+        {
+            _repository.AddMetadata(1, "", "", "", 1).Wait(0);
+        }
     }
 }

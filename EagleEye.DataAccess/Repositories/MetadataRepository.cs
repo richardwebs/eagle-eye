@@ -12,6 +12,7 @@ namespace EagleEye.DataAccess.Repositories
     {
         Task<Metadata[]> GetAllMetadata();
         Task<Metadata[]> GetMetadataByMovieId(int movieId);
+        Task AddMetadata(int movieId, string title, string language, string duration, int releaseYear);
     }
 
     public class MetadataRepository : IMetadataRepository
@@ -59,6 +60,14 @@ namespace EagleEye.DataAccess.Repositories
         {
             var metadata = await GetAllMetadata();
             return metadata.Where(x => x.MovieId == movieId).ToArray();
-        } 
+        }
+
+        public async Task AddMetadata(int movieId, string title, string language, string duration, int releaseYear)
+        {
+            await Task.Run(() =>
+            {
+                return;
+            });
+        }
     }
 }

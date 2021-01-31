@@ -2,6 +2,7 @@
 using EagleEye.DataAccess.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
+using EagleEye.API.Models;
 
 namespace EagleEye.API.Services
 {
@@ -9,6 +10,7 @@ namespace EagleEye.API.Services
     public interface IMetadataService
     {
         Task<Metadata[]> GetMetadataByMovieId(int movieId);
+        Task AddMetadata(MetadataInput metadata);
     }
 
     public class MetadataService : IMetadataService
@@ -25,6 +27,11 @@ namespace EagleEye.API.Services
             var grouping = metadata.GroupBy(x => x.Language);
             var result = grouping.Select(x => x.Single(y => y.MetadataId == x.Max(z => z.MetadataId))).OrderBy(x => x.Language); 
             return result.ToArray();
+        }
+
+        public async Task AddMetadata(MetadataInput metadata)
+        {
+            await _repository.AddMetadata(metadata.MovieId, metadata.Title, metadata.Language, metadata.Duration, metadata.ReleaseYear);
         }
     }
 }
